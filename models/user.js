@@ -36,16 +36,16 @@ function validateUser(user) {
     });
     return schema.validate(user);
 }
-
-function validateUserLogin(user) {
+/*
+function validateLogin(user) {
     const schema = Joi.object({
         email: Joi.string().min(5).max(255).required().email(),
         password: Joi.string().min(5).max(255).required(),
     });
     return schema.validate(user);
 }
-
+*/
 
 exports.User = User;
 exports.validate = validateUser;
-exports.validateLogin = validateUserLogin;
+//exports.validateLogin = validateLogin;

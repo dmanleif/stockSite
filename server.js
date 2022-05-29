@@ -4,8 +4,9 @@ const path = require('path')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const Stock = require('./models/stock.js')
-const { User, validate, validateLogin } = require('./models/user.js')
-const bcrypt = require('bcrypt')
+const { User } = require('./models/user.js')
+const verifySignup = require('./middleware/verifySignup.js')
+const verifyLogin = require('./middleware/verifyLogin.js')
 
 const app = express();
 app.set('view engine', 'ejs')
@@ -62,7 +63,6 @@ app.post('/stocks', async (req, res) => {
 // GET: ticker page
 app.get('/stocks/:ticker', async (req, res) => {
     const ticker = req.params
-    console.log(req.params)
     const stocks = await Stock.find(ticker)
     res.render('show.ejs', {stocks: stocks})
 })
@@ -100,22 +100,8 @@ app.get('/main/signup', async (req, res) => {
 })
 
 //POST: signup to database
-app.post('/users', async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
-    let user = await User.findOne({ email: req.body.email });
-    if (user) {
-        return res.status(400).send('User with that email already exists.');
-    }
-
+app.post('/users', verifySignup, async (req, res) => {
     const newUser = new User (req.body)
-
-    // Encrypts password
-    const salt = await bcrypt.genSalt(10);
-    newUser.password = await bcrypt.hash(newUser.password, salt);
-
     await newUser.save()
     res.redirect('/')
     
@@ -127,23 +113,6 @@ app.get('/main/login', async (req, res) => {
 })
 
 //POST: user logs in
-app.post('/login',  async (req, res) => {
-    const { error } = validateLogin(req.body);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
-    // Validate email
-    let user = await User.findOne({ email: req.body.email });
-    if (!user) {
-        return res.status(400).send('Incorrect email or password.');
-    }
-
-    // Validate password
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) {
-        return res.status(400).send('Incorrect email or password.');
-    }
-
+app.post('/login', verifyLogin, async (req, res) => {
     res.redirect('/');
-}) 
-
+})
