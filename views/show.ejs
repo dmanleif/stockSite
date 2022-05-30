@@ -24,12 +24,12 @@
                     <% } %>
                 </ul>
             </li>
-            <a href="/stocks/<%=stocks[i]._id%>/<%= i %>/edit"> Edit </a>
-            <form action="<%=stocks[i]._id%>?_method=DELETE" method="POST">
+            <a href="/stock/<%=stocks[i]._id%>/<%= i %>/update"> Edit </a>
+            <form action="/stock/<%=stocks[i]._id%>/delete?_method=DELETE" method="POST">
                 <button type="submit">Delete</button>
             </form>
         <% } %>
     </ul>
-    <a href="/">Main Page</a>
+    <a href="/stock/portfolio">Back To Portfolio</a>
 </body>
 </html>

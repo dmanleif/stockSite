@@ -1,4 +1,5 @@
-const Stock = require('./models/stock.js')
+const Stock = require('../models/stock.js')
+
 
 
 // Display stock form and list of stocks
@@ -6,19 +7,18 @@ exports.stock_list = async function(req, res) {
     const stocks = await Stock.find({}, {ticker: 1, _id: 0})
     ticker_array = stocks.map((item) => { return item.ticker })
     ticker_array = [...new Set(ticker_array)];
-    res.render('index.ejs', {ticker_array: ticker_array})
+    res.render('portfolio.ejs', {ticker_array: ticker_array})
 }
 
 // Create a stock and add it to portfolio
 exports.stock_create_post = async function (req, res) {
     const newStock = new Stock (req.body)
     await newStock.save()
-    let user = await User.findOne({email: 'dmanleif@yahoo.com'})
-    console.log(user)
-    user.stocks.push(newStock)
-    await user.save()
-    console.log(user)
-    res.redirect('/')
+    //let user = await User.findOne({email: 'dmanleif@yahoo.com'})
+    //console.log(user)
+    //user.stocks.push(newStock)
+    //await user.save()
+    res.redirect('/stock/portfolio')
 }
 
 // Display detail page for a stock
@@ -34,10 +34,10 @@ exports.stock_delete = async function (req, res) {
     const stock = await Stock.findByIdAndDelete(id)
     const stocks_of_type = await Stock.find({ticker: stock.ticker})
     if (stocks_of_type.length == 0) {
-        res.redirect('/')
+        res.redirect('/stock/portfolio')
     }
     else {
-        res.redirect(`/stocks/${stock.ticker}`)
+        res.redirect(`/stock/${stock.ticker}`)
     }
 }
 
@@ -49,8 +49,8 @@ exports.stock_edit_get = async (req, res) => {
 }
 
 // Edit a stock
-exports.stock_edit_post = async function (req, res) { 
+exports.stock_edit_put = async function (req, res) { 
     const { id } = req.params
     const updatedStock = await Stock.findByIdAndUpdate(id, req.body)
-    res.redirect(`/stocks/${updatedStock.ticker}`)
+    res.redirect(`/stock/${updatedStock.ticker}`)
 }

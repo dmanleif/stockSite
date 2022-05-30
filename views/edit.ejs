@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Edit <%= stock.ticker %> <%= i %>  </h1>
-    <form action="/stocks/<%= stock._id %>?_method=PUT" method="POST">
+    <form action="/stock/<%= stock._id %>/update?_method=PUT" method="POST">
         <input type="text" placeholder="Ticker Name" name="ticker" value="<%= stock.ticker %>">
         <input type="text" placeholder="Price of Purchase" name="purchasePrice" value="<%= stock.purchasePrice %>">
         <input type="text" placeholder="Threshold Selling Price" name="sellThresholdPrice" value="<%= stock.sellThresholdPrice %>">

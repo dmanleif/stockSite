@@ -9,7 +9,7 @@
 <body>
     <h1>Stock Tracker</h1>
     <h2>Add Stocks</h2>
-    <form action="/stocks" method="POST">
+    <form action="/stock/create" method="POST">
         <input type="text" placeholder="Ticker Name" name="ticker">
         <input type="text" placeholder="Price of Purchase" name="purchasePrice">
         <input type="text" placeholder="Threshold Selling Price" name="sellThresholdPrice">
@@ -20,7 +20,7 @@
     <ul class="stock_portfolio">
         <% for (let i = 0; i < ticker_array.length; ++i) {%>
             <li class="stock">
-                <a href="/stocks/<%= ticker_array[i] %>"> <%= ticker_array[i] %> </a>
+                <a href="/stock/<%= ticker_array[i] %>"> <%= ticker_array[i] %> </a>
             </li>
         <% } %>
     </ul>

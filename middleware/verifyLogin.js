@@ -1,6 +1,6 @@
 const Joi = require("joi")
-const { User } = require('../models/user.js')
 const bcrypt = require('bcrypt')
+const User = require('../models/user.js')
 
 function validateLogin(user) {
     const schema = Joi.object({
