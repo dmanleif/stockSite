@@ -18,4 +18,7 @@ router.get('/login', user_controller.user_login)
 //POST: user logs in
 router.post('/login/post', verifyLogin, user_controller.user_login_post)
 
+//POST: user logs out
+router.post('/logout/post', user_controller.user_logout_post)
+
 module.exports = router;

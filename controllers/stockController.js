@@ -1,36 +1,52 @@
 const Stock = require('../models/stock.js')
-
+const User = require('../models/user.js')
 
 
 // Display stock form and list of stocks
 exports.stock_list = async function(req, res) {
-    const stocks = await Stock.find({}, {ticker: 1, _id: 0})
-    ticker_array = stocks.map((item) => { return item.ticker })
-    ticker_array = [...new Set(ticker_array)];
-    res.render('portfolio.ejs', {ticker_array: ticker_array})
+    let user = await User.findById(req.session.user_id)
+    if (user) {
+        user = await user.populate('stocks')
+        ticker_array = user.stocks.map((item) => { return item.ticker })
+        ticker_array = [...new Set(ticker_array)];
+        res.render('portfolio.ejs', {ticker_array: ticker_array})
+    }
 }
 
 // Create a stock and add it to portfolio
 exports.stock_create_post = async function (req, res) {
     const newStock = new Stock (req.body)
+    let user = await User.findById(req.session.user_id)
+    user.stocks.push(newStock)
     await newStock.save()
-    //let user = await User.findOne({email: 'dmanleif@yahoo.com'})
-    //console.log(user)
-    //user.stocks.push(newStock)
-    //await user.save()
+    await user.save()
     res.redirect('/stock/portfolio')
 }
 
 // Display detail page for a stock
 exports.stock_detail = async function (req, res)  {
-    const ticker = req.params
-    const stocks = await Stock.find(ticker)
-    res.render('show.ejs', {stocks: stocks})
+
+    let user = await User.findById(req.session.user_id)
+    if (user) {
+        user = await user.populate('stocks')
+        const ticker = req.params.ticker
+        let stocks = user.stocks || []
+        stocks = stocks.filter(obj => {
+            return obj.ticker === ticker;
+        });
+        res.render('show.ejs', {stocks: stocks})
+    }   
 }
 
 // Delete a stock
 exports.stock_delete = async function (req, res) {
     const { id } = req.params
+
+    
+    let user = await User.findById(req.session.user_id)
+    user.stocks.pull(id)
+    user.save()
+    
     const stock = await Stock.findByIdAndDelete(id)
     const stocks_of_type = await Stock.find({ticker: stock.ticker})
     if (stocks_of_type.length == 0) {
@@ -43,6 +59,7 @@ exports.stock_delete = async function (req, res) {
 
 // Display edit form
 exports.stock_edit_get = async (req, res) => {
+
     const {id, i} = req.params
     const stock = await Stock.findById(id)
     res.render('edit.ejs', {stock: stock, i: i})

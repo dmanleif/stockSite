@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const Joi = require("joi")
-const StockSchema = require('./stockarooni.js')
+const Stock = require('./stock.js')
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
         minlength: 5,
         maxlength: 1024,
     },
-    stocks: [ StockSchema ]
+    stocks: [{ type : mongoose.ObjectId, ref: 'Stock' }]
 });
 
 const User = mongoose.model("User", UserSchema)

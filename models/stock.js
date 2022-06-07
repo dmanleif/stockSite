@@ -16,7 +16,7 @@ const StockSchema = new mongoose.Schema({
     amountBought: {
         type: Number,
         required: false,
-    },
+    }
 });
 
 const Stock = mongoose.model("Stock", StockSchema);

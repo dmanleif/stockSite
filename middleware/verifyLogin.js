@@ -10,7 +10,7 @@ function validateLogin(user) {
     return schema.validate(user);
 }
 
-async function users (req, res, next) {
+async function verifyUser (req, res, next) {
     const { error } = validateLogin(req.body);
     if (error) {
         return res.status(400).send(error.details[0].message);
@@ -25,7 +25,11 @@ async function users (req, res, next) {
     if (!validPassword) {
         return res.status(400).send('Incorrect email or password.');
     }
+
+    // Start user session
+    req.session.user_id = user.id
+
     next()
 }
 
-module.exports = users
+module.exports = verifyUser

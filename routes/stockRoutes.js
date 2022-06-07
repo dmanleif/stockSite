@@ -1,7 +1,11 @@
 const express = require('express')
 const stock_controller = require('../controllers/stockController.js')
+const requireLogin = require('../middleware/requireLogin.js')
 
 const router = express.Router()
+
+// Applying middleware to confirm user is logged in
+router.use(requireLogin)
 
 // GET: stock main page
 router.get('/portfolio', stock_controller.stock_list)
