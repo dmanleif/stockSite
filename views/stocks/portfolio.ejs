@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Site</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+    <main class="d-flex flex-column vh-100">
+        <%- include('../partials/navbar.ejs') %> 
+        <%- include('../partials/flash.ejs') %> 
+        <h1>Stock Tracker</h1>
+        <h2>Add Stocks</h2>
+        <form action="/stock/create" method="POST">
+            <input type="text" placeholder="Ticker Name" name="ticker">
+            <input type="text" placeholder="Price of Purchase" name="purchasePrice">
+            <input type="text" placeholder="Threshold Selling Price" name="sellThresholdPrice">
+            <input type="text" placeholder="Amount of Stocks Bought" name="amountBought">
+            <button type="submit">Submit</button>
+        </form>
+        <h2>Stock Portfolio</h2>
+        <ul class="stock_portfolio">
+            <% for (let i = 0; i < ticker_array.length; ++i) {%>
+                <li class="stock">
+                    <a href="/stock/<%= ticker_array[i] %>"> <%= ticker_array[i] %> </a>
+                </li>
+            <% } %>
+        </ul>
+        <%- include('../partials/footer.ejs')%>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    </main>
+</body>
+</html>
+

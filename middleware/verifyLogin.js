@@ -13,22 +13,24 @@ function validateLogin(user) {
 async function verifyUser (req, res, next) {
     const { error } = validateLogin(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+         req.flash('error', error.details[0].message);
+         return res.redirect('/user/login')
     }
     // Validate email
     let user = await User.findOne({ email: req.body.email });
     if (!user) {
-        return res.status(400).send('Incorrect email or password.');
+        req.flash('error', 'Incorrect email or password.');
+        return res.redirect('/user/login');
     }
     // Validate password
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
-        return res.status(400).send('Incorrect email or password.');
+        req.flash('error', 'Incorrect email or password.');
+        return res.redirect('/user/login');
     }
-
+    
     // Start user session
     req.session.user_id = user.id
-
     next()
 }
 

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-const Joi = require("joi")
 const Stock = require('./stock.js')
 
 const UserSchema = new mongoose.Schema({

@@ -9,7 +9,7 @@ exports.stock_list = async function(req, res) {
         user = await user.populate('stocks')
         ticker_array = user.stocks.map((item) => { return item.ticker })
         ticker_array = [...new Set(ticker_array)];
-        res.render('portfolio.ejs', {ticker_array: ticker_array})
+        res.render('stocks/portfolio.ejs', {ticker_array: ticker_array})
     }
 }
 
@@ -34,7 +34,7 @@ exports.stock_detail = async function (req, res)  {
         stocks = stocks.filter(obj => {
             return obj.ticker === ticker;
         });
-        res.render('show.ejs', {stocks: stocks})
+        res.render('stocks/show.ejs', {stocks: stocks})
     }   
 }
 
@@ -48,7 +48,13 @@ exports.stock_delete = async function (req, res) {
     user.save()
     
     const stock = await Stock.findByIdAndDelete(id)
-    const stocks_of_type = await Stock.find({ticker: stock.ticker})
+    
+    user = await user.populate('stocks')
+    let stocks = user.stocks || []
+    stocks_of_type = stocks.filter(obj => {
+        return obj.ticker === stock.ticker;
+    });
+
     if (stocks_of_type.length == 0) {
         res.redirect('/stock/portfolio')
     }
@@ -62,7 +68,7 @@ exports.stock_edit_get = async (req, res) => {
 
     const {id, i} = req.params
     const stock = await Stock.findById(id)
-    res.render('edit.ejs', {stock: stock, i: i})
+    res.render('stocks/edit.ejs', {stock: stock, i: i})
 }
 
 // Edit a stock

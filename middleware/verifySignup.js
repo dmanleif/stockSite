@@ -1,5 +1,4 @@
 const Joi = require("joi")
-const bcrypt = require('bcrypt')
 const User = require('../models/user.js')
 
 
@@ -14,18 +13,23 @@ function validateUser(user) {
 }
 
 async function verifySignup (req, res, next) {
+    
+    if (req.body.password != req.body.password_repeat) {
+        req.flash('error', 'Passwords do not match');
+        return res.redirect('/user/signup')
+    }
+    
     const { error } = validateUser(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        req.flash('error', error.details[0].message);
+        return res.redirect('/user/signup')
     }
+
     let user = await User.findOne({ email: req.body.email });
     if (user) {
-        return res.status(400).send('User with that email already exists.');
-    }
-    // Encrypts password
-    const salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
-    
+        req.flash('error', 'User with that email already exists.');
+        return res.redirect('/user/signup')
+    }  
     next()
 }
 

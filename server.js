@@ -7,7 +7,9 @@ const indexRouter = require('./routes/indexRoutes.js')
 const database = require('./config/database.js')
 const session = require('express-session')
 const sessionConfig = require('./config/session.js')
-
+const flash = require('connect-flash');
+const path = require('path')
+const storeResData = require('./middleware/storeResData')
 
 database.connect()
 
@@ -16,10 +18,16 @@ const app = express();
 app.use(session(sessionConfig))
 app.set('view engine', 'ejs')
 
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(methodOverride('_method'))
 
 // Parses data in post and adds it to body of the request object
 app.use(bodyParser.urlencoded({ extended: true }))
+
+
+// Sets up flash and middleware
+app.use(flash());
+app.use(storeResData)
 
 // Set up server
 app.listen(3000, () => {

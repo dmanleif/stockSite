@@ -1,0 +1,48 @@
+
+
+body {
+    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+.cover-container {
+    max-width: 42em;
+}
+
+main {
+    margin-top: 11em;
+}
+
+/*
+ * Header
+ */
+
+.nav-masthead .nav-link {
+  color: gray;
+  border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover,
+.nav-masthead .nav-link:focus {
+  border-bottom-color: gray;
+}
+
+.nav-masthead {
+    margin-left: 1rem;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+.nav-masthead .nav-link:active {
+    border-bottom-color: gray;
+}
+
+.nav-link.active {
+    font-weight: bold;
+    border-bottom-color: gray;
+}
